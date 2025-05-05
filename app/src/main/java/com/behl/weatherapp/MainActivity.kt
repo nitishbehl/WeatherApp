@@ -1,3 +1,5 @@
+@file:JvmName("SearchResultActivityKt")
+
 package com.behl.weatherapp
 
 import android.os.Bundle
@@ -5,13 +7,11 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.layout.*
-import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.viewmodel.compose.viewModel
-import composable.CityCard
 import composable.SearchPage
 import composable.WeatherDetails
 import kotlinx.coroutines.launch
@@ -23,6 +23,8 @@ class MainActivity : ComponentActivity() {
 
         setContent {
             val mainViewModel: MainViewModel = viewModel()
+            val cityResponse = remember { mainViewModel.cityResponse }
+            var searchText by remember { mutableStateOf("") }
 
             Column(
                 modifier = Modifier
@@ -30,48 +32,28 @@ class MainActivity : ComponentActivity() {
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.Center
             ) {
-                val cityResponse = remember { mainViewModel.cityResponse }
-                var searchText by remember { mutableStateOf("") }
-
-
-                if (cityResponse.value == null) {
-                    SearchPage(
-                        searchText,
-                        onSearchChanged = { newText ->
-                            lifecycleScope.launch {
-                                mainViewModel.getCityApi()
-                            }
+                SearchPage(
+                    searchText,
+                    onSearchChanged = { searchText = it },
+                    onSearchClick = {
+                        lifecycleScope.launch {
+                            mainViewModel.getCityApi()
+                            startActivity(
+                                SearchResultActivity.newIntent(
+                                    this@MainActivity,
+                                    cityResponse.value!!
+                                )
+                            )
                         }
-                    )
-                } else {
-
-                    CityCard(
-                        city = "kitchner",
-                        temperature = 22.0,
-                        onCardClick = {
-                            lifecycleScope.launch {
-                                mainViewModel.getWeatherApi()
-                            }
-
-                        }
-                    )
-
-                }
-
-                val weatherResponse = remember { mainViewModel.weatherResponse }
-                if (weatherResponse.value == null) {
-                    CircularProgressIndicator()
-                } else {
-                    WeatherDetails(weatherResponse)
-                }
-
+                    }
+                )
             }
         }
     }
 }
 
 @Composable
-private fun WeatherDetails(weatherResponse: MutableState<model.WeatherResponse?>) {
+internal fun WeatherDetails(weatherResponse: MutableState<model.WeatherResponse?>) {
     val weather = weatherResponse.value
 
     WeatherDetails(

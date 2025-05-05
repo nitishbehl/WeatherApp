@@ -43,6 +43,9 @@ android {
 dependencies {
     implementation(libs.ktor.client.core)
     implementation(libs.ktor.client.okhttp)
+    implementation(libs.androidx.appcompat)
+    implementation(libs.material)
+    implementation(libs.androidx.activity)
     ksp(libs.moshi.kotlin.codegen)
     implementation(libs.moshi.kotlin)
     implementation(libs.androidx.core.ktx)
