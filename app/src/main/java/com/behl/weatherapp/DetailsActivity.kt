@@ -6,15 +6,15 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
-import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.material.CircularProgressIndicator
+import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.remember
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.viewmodel.compose.viewModel
-import composable.WeatherDetails
+import com.behl.weatherapp.view_model.MainViewModel
+import composable.WeatherDetailsScreen
 import kotlinx.coroutines.launch
 
 class DetailsActivity : ComponentActivity() {
@@ -33,9 +33,29 @@ class DetailsActivity : ComponentActivity() {
             if (weatherResponse.value == null) {
                 CircularProgressIndicator()
             } else {
-                WeatherDetails(weatherResponse)
+                WeatherDetailsView(weatherResponse)
             }
         }
+    }
+
+    @Composable
+    fun WeatherDetailsView(weatherResponse: MutableState<model.WeatherResponse?>) {
+        val weather = weatherResponse.value
+
+        WeatherDetailsScreen(
+            city = weather?.location?.city ?: "Unknown City",
+            day = weather?.forecast?.firstOrNull()?.day ?: "Unknown Day",
+            date = weather?.date ?: "Unknown Date",
+            temperature = weather?.current?.temperature?.value ?: 0.0,
+            forecast = weather?.forecast?.filterNotNull() ?: emptyList(),
+            alert = weather?.alerts?.firstOrNull()?.title ?: "No active alerts",
+            condition = weather?.current?.weather?.main ?: "Unknown Condition",
+            uvIndex = weather?.current?.uvIndex ?: 0.0,
+            precipitation = weather?.current?.precipitation ?: 0.0,
+            wind = weather?.current?.wind?.speed ?: 0.0,
+            humidity = weather?.current?.humidity ?: 0.0
+
+        )
     }
 
     companion object {

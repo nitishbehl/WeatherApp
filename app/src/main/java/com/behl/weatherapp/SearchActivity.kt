@@ -1,22 +1,25 @@
-@file:JvmName("SearchResultActivityKt")
-
 package com.behl.weatherapp
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
-import androidx.compose.foundation.layout.*
-import androidx.compose.runtime.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.behl.weatherapp.view_model.MainViewModel
 import composable.SearchPage
-import composable.WeatherDetails
 import kotlinx.coroutines.launch
 
-class MainActivity : ComponentActivity() {
+class SearchActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -27,8 +30,7 @@ class MainActivity : ComponentActivity() {
             var searchText by remember { mutableStateOf("") }
 
             Column(
-                modifier = Modifier
-                    .fillMaxSize(),
+                modifier = Modifier.fillMaxSize(),
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.Center
             ) {
@@ -40,7 +42,7 @@ class MainActivity : ComponentActivity() {
                             mainViewModel.getCityApi()
                             startActivity(
                                 SearchResultActivity.newIntent(
-                                    this@MainActivity,
+                                    this@SearchActivity,
                                     cityResponse.value!!
                                 )
                             )
@@ -50,20 +52,4 @@ class MainActivity : ComponentActivity() {
             }
         }
     }
-}
-
-@Composable
-internal fun WeatherDetails(weatherResponse: MutableState<model.WeatherResponse?>) {
-    val weather = weatherResponse.value
-
-    WeatherDetails(
-        city = weather?.location?.city ?: "Unknown City",
-        date = weather?.date ?: "Unknown date",
-        temperature = weather?.current?.temperature?.value ?: 0.0,
-        feelsLike = weather?.current?.feelsLike?.value ?: 0.0,
-        weatherDescription = weather?.current?.weather?.description ?: "No description",
-        alert = "No alerts",
-        forecast = weather?.forecast?.filterNotNull() ?: emptyList(),
-        airQuality = "Good"
-    )
 }

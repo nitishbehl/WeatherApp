@@ -1,56 +1,193 @@
 package composable
 
-import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.*
+import androidx.compose.material3.Button
+import androidx.compose.material3.Card
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.behl.weatherapp.R
+import model.CityResponse
 
 @Composable
 fun CityCard(
     city: String,
+    condition: String,
+    datetime: String,
+    humidity: String,
     temperature: Double,
     onCardClick: () -> Unit = {}
 ) {
-    Card(
+    Box(
         modifier = Modifier
-            .fillMaxWidth()
-            .padding(8.dp)
-            .clickable(onClick = onCardClick),
-        elevation = CardDefaults.cardElevation(6.dp),
-        shape = RoundedCornerShape(12.dp)
+            .fillMaxSize()
+            .background(color = Color(0xFF929CDE))
     ) {
-        Column(
+        Card(
             modifier = Modifier
-                .padding(16.dp)
+                .fillMaxWidth()
+                .padding(16.dp),
+            shape = RoundedCornerShape(16.dp)
         ) {
-            Text(
-                text = city,
-                style = MaterialTheme.typography.titleLarge,
-                fontWeight = FontWeight.Bold
-            )
-            Spacer(modifier = Modifier.height(8.dp))
-            Text(
-                text = "${temperature}°C",
-                fontSize = 22.sp,
-                fontWeight = FontWeight.Medium
-            )
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(16.dp),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Column(
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+                    Image(
+                        painter = painterResource(id = getWeatherIcon(condition)),
+                        contentDescription = "Weather Icon",
+                        modifier = Modifier.size(80.dp),
+                        contentScale = ContentScale.Fit
+                    )
+                    Spacer(modifier = Modifier.height(8.dp))
+                    Text(
+                        text = city,
+                        style = MaterialTheme.typography.titleMedium.copy(
+                            fontWeight = FontWeight.Bold,
+                            color = Color.Black
+                        )
+                    )
+                }
+
+                Spacer(modifier = Modifier.width(16.dp))
+
+                Column(
+                    modifier = Modifier.weight(1f)
+                ) {
+                    Text(
+                        text = "${temperature}°C",
+                        fontSize = 22.sp,
+                        fontWeight = FontWeight.Medium
+                    )
+                    Spacer(modifier = Modifier.height(4.dp))
+                    Text(
+                        text = datetime,
+                        fontSize = 10.sp,
+                        fontWeight = FontWeight.Light
+                    )
+                }
+
+                Spacer(modifier = Modifier.width(16.dp))
+
+                Column(
+                    horizontalAlignment = Alignment.End
+                ) {
+                    Box(
+                        modifier = Modifier
+                            .height(20.dp)
+                            .clip(RoundedCornerShape(10.dp))
+                            .background(color = Color(0xFFD94774))
+                            .padding(horizontal = 8.dp),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        Text(
+                            text = "Humidity: $humidity",
+                            fontSize = 10.sp,
+                            fontWeight = FontWeight.Medium,
+                            color = Color.White,
+                        )
+                    }
+                    Spacer(modifier = Modifier.height(6.dp))
+                    Box(
+                        modifier = Modifier
+                            .height(20.dp)
+                            .clip(RoundedCornerShape(10.dp))
+                            .background(color = Color(0xFF6A75BA))
+                            .padding(horizontal = 8.dp),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        Text(
+                            text = "Condition: $condition",
+                            fontSize = 10.sp,
+                            fontWeight = FontWeight.Medium,
+                            color = Color.White,
+                        )
+                    }
+                    Spacer(modifier = Modifier.height(16.dp))
+                    Button(
+                        modifier = Modifier
+                            .width(100.dp)
+                            .height(32.dp),
+                        shape = RoundedCornerShape(8.dp),
+                        onClick = onCardClick
+                    ) {
+                        Text(text = "VIEW STATS", fontSize = 10.sp)
+                    }
+                }
+            }
         }
     }
 }
 
+@Composable
+fun cityList(cities: List<CityResponse.City>) {
+    LazyColumn(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(Color(0xFF929CDE))
+    ) {
+        items(cities.size) { index ->
+            val city = cities[index]
+            CityCard(
+                city = city.city.orEmpty(),
+                condition = city.condition.orEmpty(),
+                datetime = city.datetime.orEmpty(),
+                humidity = city.humidity.orEmpty(),
+                temperature = city.temperature?.toDoubleOrNull() ?: 0.0
+            )
+        }
+    }
+}
+@Composable
+fun getWeatherIcon(condition: String): Int {
+    return when (condition.lowercase()) {
+        "rainy" -> R.drawable.rainy_day
+        "sunny" -> R.drawable.sun
+        "cloudy" -> R.drawable.sun_cloud_angled_rain
+        "snow" -> R.drawable.snow
+        else -> R.drawable.moon_cloud_fast_wind
+    }
+}
+
+
 @Preview(showBackground = true)
 @Composable
-fun CityCardPreview() {
-    MaterialTheme {
-        CityCard(
-            city = "Kitchener",
-            temperature = 25.5
-        )
-    }
+fun CityListPreview() {
+    val cities = listOf(
+        CityResponse.City("Toronto", "Cloudy", "Mon, 10:15 AM", "65%", "22.5"),
+        CityResponse.City("Vancouver", "Rainy", "Mon, 7:15 AM", "88%", "18.0"),
+        CityResponse.City("Calgary", "Sunny", "Mon, 8:00 AM", "40%", "16.3"),
+        CityResponse.City("Montreal", "Partly Cloudy", "Mon, 11:00 AM", "55%", "20.1"),
+        CityResponse.City("Halifax", "Windy", "Mon, 12:30 PM", "60%", "14.7")
+    )
+    cityList(cities)
+
 }

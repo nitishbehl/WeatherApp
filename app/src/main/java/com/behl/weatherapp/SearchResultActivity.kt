@@ -16,6 +16,9 @@ class SearchResultActivity : ComponentActivity() {
         setContent {
             CityCard(
                 city = "kitchner",
+                condition = "sunny",
+                datetime = "10:00",
+                humidity = "22.0",
                 temperature = 22.0,
                 onCardClick = {
                     lifecycleScope.launch {
@@ -27,7 +30,7 @@ class SearchResultActivity : ComponentActivity() {
     }
 
     companion object {
-        fun newIntent(activity: MainActivity, response: CityResponse): Intent {
+        fun newIntent(activity: SearchActivity, response: CityResponse): Intent {
             return Intent(activity, SearchResultActivity::class.java)
         }
     }
