@@ -62,7 +62,7 @@ class DetailsActivity : ComponentActivity() {
         )
 
         WeatherDetailsScreen(
-            city = cityName,
+            city = weather?.location?.city?:"",
             day = weather?.forecast?.firstOrNull()?.day ?: "Unknown Day",
             date = weather?.date ?: "Unknown Date",
             temperature = weather?.current?.temperature?.value ?: 0.0,

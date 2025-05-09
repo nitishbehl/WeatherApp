@@ -14,9 +14,14 @@ import model.WeatherResponse
 class DetailsViewModel : ViewModel() {
     var weatherResponse: MutableState<WeatherResponse?> = mutableStateOf(null)
 
-
     suspend fun getWeatherApi(city: String): WeatherResponse? {
-        val client = HttpClient(OkHttp).get("https://nitishbehl.github.io/Data/Weather.json")
+        val urlString = if (city == "Toronto") {
+            "https://nitishbehl.github.io/Data/Weather_Toronto.json"
+        } else {
+            "https://nitishbehl.github.io/Data/Weather_Vancouver.json"
+        }
+
+        val client = HttpClient(OkHttp).get(urlString)
         val adapter = Moshi.Builder().build().adapter(WeatherResponse::class.java)
         val string = client.bodyAsText()
         Log.v("api response", string)
