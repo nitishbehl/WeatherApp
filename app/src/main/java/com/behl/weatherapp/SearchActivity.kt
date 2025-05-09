@@ -22,7 +22,6 @@ import kotlinx.coroutines.launch
 class SearchActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        enableEdgeToEdge()
 
         setContent {
             val mainViewModel: MainViewModel = viewModel()

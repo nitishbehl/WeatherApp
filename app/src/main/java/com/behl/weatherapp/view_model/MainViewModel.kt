@@ -38,4 +38,3 @@ class MainViewModel : ViewModel() {
     }
 }
 
-data class WeatherIndex(val image: Int, val string: String, val value: String)

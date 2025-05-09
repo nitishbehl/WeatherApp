@@ -16,6 +16,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.behl.weatherapp.view_model.MainViewModel
 import composable.WeatherDetailsScreen
 import kotlinx.coroutines.launch
+import model.WeatherIndex
 
 class DetailsActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -42,6 +43,20 @@ class DetailsActivity : ComponentActivity() {
     fun WeatherDetailsView(weatherResponse: MutableState<model.WeatherResponse?>) {
         val weather = weatherResponse.value
 
+        val indexList = mutableListOf<WeatherIndex>(
+            WeatherIndex(
+                image = R.drawable.snow_moon, "Humidity",
+                weather?.current?.humidity.toString()
+            ),
+            WeatherIndex(image = R.drawable.sun, "Wind",
+                weather?.current?.wind?.speed.toString()),
+            WeatherIndex(
+                image = R.drawable.sun,
+                "Sun",
+                weather?.current?.uvIndex?.toString() ?: ""
+            ),
+        )
+
         WeatherDetailsScreen(
             city = weather?.location?.city ?: "Unknown City",
             day = weather?.forecast?.firstOrNull()?.day ?: "Unknown Day",
@@ -53,7 +68,8 @@ class DetailsActivity : ComponentActivity() {
             uvIndex = weather?.current?.uvIndex ?: 0.0,
             precipitation = weather?.current?.precipitation ?: 0.0,
             wind = weather?.current?.wind?.speed ?: 0.0,
-            humidity = weather?.current?.humidity ?: 0
+            humidity = weather?.current?.humidity ?: 0,
+            indexList = indexList
 
         )
     }

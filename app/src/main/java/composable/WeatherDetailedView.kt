@@ -1,6 +1,5 @@
 package composable
 
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -10,8 +9,6 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -23,13 +20,12 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.behl.weatherapp.R
-import com.behl.weatherapp.view_model.WeatherIndex
+import model.WeatherIndex
 import model.WeatherResponse.Forecast
 
 @Composable
@@ -44,7 +40,8 @@ fun WeatherDetailsScreen(
     uvIndex: Double,
     precipitation: Double,
     wind: Double,
-    humidity: Int
+    humidity: Int,
+    indexList: MutableList<WeatherIndex>
 ) {
 
     Column(
@@ -77,13 +74,7 @@ fun WeatherDetailsScreen(
         Spacer(modifier = Modifier.height(24.dp))
 
 
-        GridBoxView(
-            mutableListOf<WeatherIndex>(
-                WeatherIndex(image = R.drawable.snow_moon, "Humidity", "60"),
-                WeatherIndex(image = R.drawable.sun, "Wind", "10"),
-                WeatherIndex(image = R.drawable.rainy_day, "Rainy", "20"),
-                WeatherIndex(image = R.drawable.sun, "Sun", "20"),)
-        )
+        GridBoxView(indexList)
     }
 }
 
@@ -174,7 +165,7 @@ fun icon(condition: String): Int {
 fun WeatherDetailsPreview() {
     WeatherDetailsScreen(
         city = "New York",
-        date = "May 2, 2025",
+        day = "Monday",
         temperature = 22.5,
         forecast = listOf(
             Forecast(day = "Today", time = "10:00 AM", temperature = 20.0),
@@ -185,11 +176,12 @@ fun WeatherDetailsPreview() {
         ),
         alert = "No Alerts",
         condition = "Sunny",
-        day = "Monday",
+        date = "May 2, 2025",
         uvIndex = 7.5,
         precipitation = 5.0,
         wind = 10.0,
-        humidity = 60
+        humidity = 60,
+        indexList = mutableListOf()
 
     )
 }

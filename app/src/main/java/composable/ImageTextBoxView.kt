@@ -22,7 +22,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.behl.weatherapp.R
-import com.behl.weatherapp.view_model.WeatherIndex
+import model.WeatherIndex
 
 @Composable
 fun ImageTextBoxView(string: String, image: Int, value: String) {
