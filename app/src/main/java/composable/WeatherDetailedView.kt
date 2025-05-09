@@ -29,6 +29,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.behl.weatherapp.R
+import com.behl.weatherapp.view_model.WeatherIndex
 import model.WeatherResponse.Forecast
 
 @Composable
@@ -43,7 +44,7 @@ fun WeatherDetailsScreen(
     uvIndex: Double,
     precipitation: Double,
     wind: Double,
-    humidity: Any
+    humidity: Int
 ) {
 
     Column(
@@ -75,120 +76,14 @@ fun WeatherDetailsScreen(
 
         Spacer(modifier = Modifier.height(24.dp))
 
-        Row {
-            Box(
-                modifier = Modifier
-                    .size(180.dp)
-                    .clip(RoundedCornerShape(16.dp))
-                    .background(Color.White.copy(alpha = 0.8f))
-                    .padding(16.dp)
 
-            ) {
-                Column(
-                    horizontalAlignment = Alignment.CenterHorizontally,
-                    verticalArrangement = Arrangement.SpaceBetween,
-                    modifier = Modifier.fillMaxWidth()
-                ) {
-                    Image(
-                        painter = painterResource(id = R.drawable.sun),
-                        contentDescription = "UV Index Icon",
-                        modifier = Modifier.size(64.dp)
-                    )
-                    Spacer(modifier = Modifier.height(12.dp))
-                    Text(
-                        text = "UV Index",
-                        style = MaterialTheme.typography.titleMedium,
-                        fontWeight = FontWeight.Medium
-                    )
-                    Text(
-                        text = uvIndex.toString(),
-                        style = MaterialTheme.typography.headlineSmall,
-                        fontWeight = FontWeight.Bold,
-                        color = Color(0xFFEF6C00)
-                    )
-                }
-            }
-            Spacer(modifier = Modifier.width(16.dp))
-            Box(
-                modifier = Modifier
-                    .size(180.dp)
-                    .clip(RoundedCornerShape(16.dp))
-                    .background(Color.White.copy(alpha = 0.8f))
-                    .padding(16.dp)
-
-            ) {
-                Column(
-                    horizontalAlignment = Alignment.CenterHorizontally,
-                    verticalArrangement = Arrangement.SpaceBetween,
-                    modifier = Modifier.fillMaxWidth()
-                ) {
-                    Image(
-                        painter = painterResource(id = R.drawable.rainy_day),
-                        contentDescription = "Precipitation",
-                        modifier = Modifier.size(64.dp)
-                    )
-                    Spacer(modifier = Modifier.height(12.dp))
-                    Text(
-                        text = "Precipitation",
-                        style = MaterialTheme.typography.titleMedium,
-                        fontWeight = FontWeight.Medium
-                    )
-                    Text(
-                        text = precipitation.toString(),
-                        style = MaterialTheme.typography.headlineSmall,
-                        fontWeight = FontWeight.Bold,
-                        color = Color(0xFFEF6C00)
-                    )
-                }
-            }
-
-        }
-        Row {
-            Box(
-                modifier = Modifier
-                    .size(180.dp)
-                    .clip(RoundedCornerShape(16.dp))
-                    .background(Color.White.copy(alpha = 0.8f))
-                    .padding(16.dp)
-
-            ) {
-                Column(
-                    horizontalAlignment = Alignment.CenterHorizontally,
-                    verticalArrangement = Arrangement.SpaceBetween,
-                    modifier = Modifier.fillMaxWidth()
-                ) {
-                    Image(
-                        painter = painterResource(id = R.drawable.wind),
-                        contentDescription = "wind Icon",
-                        modifier = Modifier.size(64.dp)
-                    )
-                    Spacer(modifier = Modifier.height(12.dp))
-                    Text(
-                        text = "Wind",
-                        style = MaterialTheme.typography.titleMedium,
-                        fontWeight = FontWeight.Medium
-                    )
-                    Text(
-                        text = wind.toString(),
-                        style = MaterialTheme.typography.headlineSmall,
-                        fontWeight = FontWeight.Bold,
-                        color = Color(0xFFEF6C00)
-                    )
-                }
-            }
-            Spacer(modifier = Modifier.width(16.dp))
-            Box(
-                modifier = Modifier
-                    .size(180.dp)
-                    .clip(RoundedCornerShape(16.dp))
-                    .background(Color.White.copy(alpha = 0.8f))
-                    .padding(16.dp)
-
-            ) {
-                ImageTextBoxView(humidity)
-            }
-        }
-
+        GridBoxView(
+            mutableListOf<WeatherIndex>(
+                WeatherIndex(image = R.drawable.snow_moon, "Humidity", "60"),
+                WeatherIndex(image = R.drawable.sun, "Wind", "10"),
+                WeatherIndex(image = R.drawable.rainy_day, "Rainy", "20"),
+                WeatherIndex(image = R.drawable.sun, "Sun", "20"),)
+        )
     }
 }
 
@@ -294,7 +189,7 @@ fun WeatherDetailsPreview() {
         uvIndex = 7.5,
         precipitation = 5.0,
         wind = 10.0,
-        humidity = 60.0
+        humidity = 60
 
     )
 }

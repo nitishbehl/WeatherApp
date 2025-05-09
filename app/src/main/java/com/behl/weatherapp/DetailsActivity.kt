@@ -53,7 +53,7 @@ class DetailsActivity : ComponentActivity() {
             uvIndex = weather?.current?.uvIndex ?: 0.0,
             precipitation = weather?.current?.precipitation ?: 0.0,
             wind = weather?.current?.wind?.speed ?: 0.0,
-            humidity = weather?.current?.humidity ?: 0.0
+            humidity = weather?.current?.humidity ?: 0
 
         )
     }
