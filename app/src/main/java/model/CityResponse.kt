@@ -12,7 +12,7 @@ data class CityResponse(
     @JsonClass(generateAdapter = true)
     data class City(
         @Json(name = "city")
-        var city: String? = "", // Toronto
+        var city: String = "", // Toronto
         @Json(name = "condition")
         var condition: String? = "", // Cloudy
         @Json(name = "datetime")

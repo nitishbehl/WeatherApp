@@ -12,7 +12,6 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
@@ -30,7 +29,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.behl.weatherapp.R
-import model.CityResponse
 
 @Composable
 fun CityCard(
@@ -39,7 +37,7 @@ fun CityCard(
     datetime: String,
     humidity: String,
     temperature: Double,
-    onCardClick: () -> Unit = {}
+    onCityClicked: (String) -> Unit
 ) {
     Box(
         modifier = Modifier
@@ -137,7 +135,7 @@ fun CityCard(
                             .width(100.dp)
                             .height(32.dp),
                         shape = RoundedCornerShape(8.dp),
-                        onClick = onCardClick
+                        onClick = { onCityClicked(city) }
                     ) {
                         Text(text = "VIEW STATS", fontSize = 10.sp)
                     }
@@ -147,25 +145,7 @@ fun CityCard(
     }
 }
 
-@Composable
-fun cityList(cities: List<CityResponse.City>) {
-    LazyColumn(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(Color(0xFF929CDE))
-    ) {
-        items(cities.size) { index ->
-            val city = cities[index]
-            CityCard(
-                city = city.city.orEmpty(),
-                condition = city.condition.orEmpty(),
-                datetime = city.datetime.orEmpty(),
-                humidity = city.humidity.orEmpty(),
-                temperature = city.temperature?.toDoubleOrNull() ?: 0.0
-            )
-        }
-    }
-}
+
 @Composable
 fun getWeatherIcon(condition: String): Int {
     return when (condition.lowercase()) {
@@ -180,14 +160,18 @@ fun getWeatherIcon(condition: String): Int {
 
 @Preview(showBackground = true)
 @Composable
-fun CityListPreview() {
-    val cities = listOf(
-        CityResponse.City("Toronto", "Cloudy", "Mon, 10:15 AM", "65%", "22.5"),
-        CityResponse.City("Vancouver", "Rainy", "Mon, 7:15 AM", "88%", "18.0"),
-        CityResponse.City("Calgary", "Sunny", "Mon, 8:00 AM", "40%", "16.3"),
-        CityResponse.City("Montreal", "Partly Cloudy", "Mon, 11:00 AM", "55%", "20.1"),
-        CityResponse.City("Halifax", "Windy", "Mon, 12:30 PM", "60%", "14.7")
+fun CityCardPreview() {
+    CityCard(
+        city = "Kitchner",
+        condition = "sunny",
+        datetime = "10:00",
+        humidity = "22.0",
+        temperature = 22.0,
+        onCityClicked = {
+
+        }
     )
-    cityList(cities)
 
 }
+
+

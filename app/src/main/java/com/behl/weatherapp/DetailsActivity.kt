@@ -13,34 +13,36 @@ import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.remember
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.behl.weatherapp.view_model.MainViewModel
+import com.behl.weatherapp.view_model.DetailsViewModel
 import composable.WeatherDetailsScreen
 import kotlinx.coroutines.launch
 import model.WeatherIndex
+import model.WeatherResponse
 
 class DetailsActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
+        val city = intent?.getStringExtra("city") ?: "Unknown City"
         setContent {
-            val mainViewModel: MainViewModel = viewModel()
+            val detailsViewModel: DetailsViewModel = viewModel()
 
             LaunchedEffect(Unit) {
                 lifecycleScope.launch {
-                    mainViewModel.getWeatherApi()
+                    detailsViewModel.getWeatherApi(city)
                 }
             }
-            val weatherResponse = remember { mainViewModel.weatherResponse }
+            val weatherResponse = remember { detailsViewModel.weatherResponse }
             if (weatherResponse.value == null) {
                 CircularProgressIndicator()
             } else {
-                WeatherDetailsView(weatherResponse)
+                WeatherDetailsView(weatherResponse, city)
             }
         }
     }
 
     @Composable
-    fun WeatherDetailsView(weatherResponse: MutableState<model.WeatherResponse?>) {
+    fun WeatherDetailsView(weatherResponse: MutableState<WeatherResponse?>, cityName: String) {
         val weather = weatherResponse.value
 
         val indexList = mutableListOf<WeatherIndex>(
@@ -48,8 +50,10 @@ class DetailsActivity : ComponentActivity() {
                 image = R.drawable.snow_moon, "Humidity",
                 weather?.current?.humidity.toString()
             ),
-            WeatherIndex(image = R.drawable.sun, "Wind",
-                weather?.current?.wind?.speed.toString()),
+            WeatherIndex(
+                image = R.drawable.rainy_day, "Wind",
+                weather?.current?.wind?.speed.toString()
+            ),
             WeatherIndex(
                 image = R.drawable.sun,
                 "Sun",
@@ -58,7 +62,7 @@ class DetailsActivity : ComponentActivity() {
         )
 
         WeatherDetailsScreen(
-            city = weather?.location?.city ?: "Unknown City",
+            city = cityName,
             day = weather?.forecast?.firstOrNull()?.day ?: "Unknown Day",
             date = weather?.date ?: "Unknown Date",
             temperature = weather?.current?.temperature?.value ?: 0.0,
@@ -75,8 +79,10 @@ class DetailsActivity : ComponentActivity() {
     }
 
     companion object {
-        fun newIntent(activity: Activity): Intent {
-            return Intent(activity, DetailsActivity::class.java)
+        fun newIntent(activity: Activity, city: String): Intent {
+            val intent = Intent(activity, DetailsActivity::class.java)
+            intent.putExtra("city", city)
+            return intent
         }
     }
 }
