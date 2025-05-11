@@ -3,6 +3,7 @@ package com.behl.weatherapp
 import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
@@ -15,6 +16,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.behl.weatherapp.view_model.DetailsViewModel
 import composable.WeatherDetailsScreen
+import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
 import model.WeatherIndex
 import model.WeatherResponse
@@ -29,9 +31,22 @@ class DetailsActivity : ComponentActivity() {
 
             LaunchedEffect(Unit) {
                 lifecycleScope.launch {
-                    detailsViewModel.getWeatherApi(city)
+
+                    Log.v("vb","Hello 1")
+                    val torontoResponse = async { detailsViewModel.getWeatherApi("Toronto") }
+                    Log.v("vb","Hello 2")
+                    val vanResponse = async { detailsViewModel.getWeatherApi("Vancouver") }
+                    Log.v("vb","Hello 3")
+                    val calResponse = async { detailsViewModel.getWeatherApi("Calgary") }
+                    Log.v("vb","Hello 4")
+
+//                    println("torontoResponse ${torontoResponse?.location?.city}")
+//                    println("vanResponse ${torontoResponse?.location?.city}")
+//                    println("calResponse ${torontoResponse?.location?.city}")
                 }
             }
+
+
             val weatherResponse = remember { detailsViewModel.weatherResponse }
             if (weatherResponse.value == null) {
                 CircularProgressIndicator()

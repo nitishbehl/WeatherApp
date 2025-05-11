@@ -5,8 +5,15 @@ import android.os.Bundle
 import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.size
+import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.dp
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.behl.weatherapp.view_model.SearchViewModel
@@ -26,10 +33,19 @@ class MainActivity : ComponentActivity() {
                     viewModel.getCityApi()
                 }
             }
-            CityListView(cityResponse.value?.cities, onCityClicked = { city ->
-                Log.v("city clicked", city)
-                startActivity(DetailsActivity.newIntent(this@MainActivity, city))
-            })
+            if (cityResponse.value == null) {
+                Box(
+                    modifier = Modifier.fillMaxSize(),
+                    contentAlignment = Alignment.Center
+                ) {
+                    CircularProgressIndicator(modifier = Modifier.size(48.dp))
+                }
+            } else {
+                CityListView(cityResponse.value?.cities, onCityClicked = { city ->
+                    Log.v("city clicked", city)
+                    startActivity(DetailsActivity.newIntent(this@MainActivity, city))
+                })
+            }
         }
     }
 

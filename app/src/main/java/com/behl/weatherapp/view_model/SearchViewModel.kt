@@ -19,7 +19,6 @@ class SearchViewModel : ViewModel() {
         val client = HttpClient(OkHttp).get("https://nitishbehl.github.io/Data/city.json")
         val adapter = Moshi.Builder().build().adapter(CityResponse::class.java)
         val string = client.bodyAsText()
-        Log.v("api response", string)
         val response = adapter.fromJson(string)
         cityResponse.value = response
         return response
