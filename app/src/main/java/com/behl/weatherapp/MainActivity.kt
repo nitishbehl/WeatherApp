@@ -28,14 +28,16 @@ class MainActivity : ComponentActivity() {
             }
             CityListView(cityResponse.value?.cities, onCityClicked = { city ->
                 Log.v("city clicked", city)
-                startActivity(DetailsActivity.newIntent(this@MainActivity,city))
+                startActivity(DetailsActivity.newIntent(this@MainActivity, city))
             })
         }
     }
 
     companion object {
-        fun newIntent(activity: FirstActivity, response: CityResponse): Intent {
-            return Intent(activity, MainActivity::class.java)
+        fun newIntent(activity: SearchActivity, cityName: String): Intent {
+            val intent = Intent(activity, MainActivity::class.java)
+            intent.putExtra("city", cityName)
+            return intent
         }
     }
 }

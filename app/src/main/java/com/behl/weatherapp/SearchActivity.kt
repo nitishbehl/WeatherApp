@@ -17,7 +17,7 @@ import composable.SearchPage
 import kotlinx.coroutines.launch
 import model.CityResponse
 
-class FirstActivity : ComponentActivity() {
+class SearchActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -36,8 +36,8 @@ class FirstActivity : ComponentActivity() {
                         lifecycleScope.launch {
                             startActivity(
                                 MainActivity.newIntent(
-                                    this@FirstActivity,
-                                    CityResponse()
+                                    this@SearchActivity,
+                                    searchText
                                 )
                             )
                         }
