@@ -47,27 +47,47 @@ internal fun WeekdayForecastView(
         ) {
             items(forecast) { item ->
                 Row(
-                    modifier = Modifier.fillMaxWidth(),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(vertical = 4.dp),
                     horizontalArrangement = Arrangement.SpaceBetween,
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-                    Text(
-                        text = item.day ?: "Unknown Day",
-                        style = MaterialTheme.typography.titleMedium,
-                        fontWeight = FontWeight.Medium,
-                        textAlign = TextAlign.Start
-                    )
-                    Image(
-                        painter = painterResource(id = icon(condition)),
-                        contentDescription = "Weather Icon",
-                        modifier = Modifier.size(40.dp)
-                    )
-                    Text(
-                        text = "${item.temperature}°C",
-                        style = MaterialTheme.typography.titleMedium,
-                        fontWeight = FontWeight.Medium,
-                        textAlign = TextAlign.Start,
-                    )
+                    Box(
+                        modifier = Modifier.weight(1f),
+                        contentAlignment = Alignment.CenterStart
+                    ) {
+                        Text(
+                            text = item.day ?: "Unknown Day",
+                            style = MaterialTheme.typography.titleMedium,
+                            fontWeight = FontWeight.Medium,
+                            textAlign = TextAlign.Start
+                        )
+                    }
+                    Box(
+                        modifier = Modifier.weight(1f),
+                        contentAlignment = Alignment.Center
+                       ){
+                        Image(
+                            painter = painterResource(id = icon(condition)),
+                            contentDescription = "Weather Icon",
+                            modifier = Modifier.size(40.dp)
+                        )
+                    }
+                    Box(
+                        modifier = Modifier.weight(1f),
+                        contentAlignment = Alignment.CenterEnd
+                    ){
+                        Text(
+                            text = "${item.temperature}°C",
+                            style = MaterialTheme.typography.titleMedium,
+                            fontWeight = FontWeight.Medium,
+                            textAlign = TextAlign.Start,
+                        )
+
+                    }
+
+
                 }
             }
         }
@@ -79,11 +99,11 @@ internal fun WeekdayForecastView(
 fun WeekdayForecastViewPreview() {
     WeekdayForecastView(
         forecast = listOf(
-            Forecast(day = "Today", time = "10:00 AM", temperature = 20.0),
-            Forecast(day = "Today", time = "12:00 PM", temperature = 22.0),
-            Forecast(day = "Today", time = "2:00 PM", temperature = 24.0),
-            Forecast(day = "Today", time = "4:00 PM", temperature = 21.0),
-            Forecast(day = "Today", time = "6:00 PM", temperature = 19.0)
+            Forecast(day = "Monday", time = "10:00 AM", temperature = 20.0),
+            Forecast(day = "Tuesday", time = "12:00 PM", temperature = 22.0),
+            Forecast(day = "Wednesday", time = "2:00 PM", temperature = 24.0),
+            Forecast(day = "Thursday", time = "4:00 PM", temperature = 21.0),
+            Forecast(day = "Friday", time = "6:00 PM", temperature = 19.0)
         ),
         condition = "Sunny",
     )

@@ -20,11 +20,12 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import model.WeatherResponse.Forecast
 
 @Composable
-internal fun TodaysForecastView(
+internal fun TodayForecastView(
     forecast: List<Forecast>,
     condition: String
 ) {
@@ -68,4 +69,23 @@ internal fun TodaysForecastView(
         }
     }
 }
+@Preview (showBackground = true)
+@Composable
+fun TodayForecastViewPreview() {
+    TodayForecastView(
+
+        forecast = listOf(
+            Forecast(day = "Today", time = "10:00 AM", temperature = 20.0),
+            Forecast(day = "Today", time = "12:00 PM", temperature = 22.0),
+            Forecast(day = "Today", time = "2:00 PM", temperature = 24.0),
+            Forecast(day = "Today", time = "4:00 PM", temperature = 21.0),
+            Forecast(day = "Today", time = "6:00 PM", temperature = 19.0)
+        ),
+        condition = "Sunny"
+    )
+
+
+}
+
+
 

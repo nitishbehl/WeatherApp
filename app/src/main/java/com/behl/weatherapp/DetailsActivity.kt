@@ -42,7 +42,7 @@ class DetailsActivity : ComponentActivity() {
     }
 
     @Composable
-    fun WeatherDetailsView(weatherResponse: MutableState<WeatherResponse?>, cityName: String) {
+    fun WeatherDetailsView(weatherResponse: MutableState<WeatherResponse?>, city: String) {
         val weather = weatherResponse.value
 
         val indexList = mutableListOf<WeatherIndex>(
@@ -51,32 +51,31 @@ class DetailsActivity : ComponentActivity() {
                 weather?.current?.humidity.toString()
             ),
             WeatherIndex(
-                image = R.drawable.rainy_day, "Wind",
-                weather?.current?.wind?.speed.toString()
+                image = R.drawable.sun_cloud_angled_rain, "Uv Index",
+                weather?.current?.uvIndex.toString()
             ),
             WeatherIndex(
-                image = R.drawable.sun,
-                "Sun",
+                image = R.drawable.sun, "Sun",
                 weather?.current?.uvIndex?.toString() ?: ""
             ),
-        )
+            WeatherIndex(
+                image = R.drawable.rainy_day, "Rain",
+                weather?.current?.wind?.speed?.toString() ?: ""
+            ),
+
+            )
 
         WeatherDetailsScreen(
-            city = weather?.location?.city?:"",
-            day = weather?.forecast?.firstOrNull()?.day ?: "Unknown Day",
+            city = weather?.location?.city ?: "",
             date = weather?.date ?: "Unknown Date",
             temperature = weather?.current?.temperature?.value ?: 0.0,
             forecast = weather?.forecast?.filterNotNull() ?: emptyList(),
             alert = weather?.alerts?.firstOrNull()?.title ?: "No active alerts",
             condition = weather?.current?.weather?.main ?: "Unknown Condition",
-            uvIndex = weather?.current?.uvIndex ?: 0.0,
-            precipitation = weather?.current?.precipitation ?: 0.0,
-            wind = weather?.current?.wind?.speed ?: 0.0,
-            humidity = weather?.current?.humidity ?: 0,
             indexList = indexList
-
         )
     }
+
 
     companion object {
         fun newIntent(activity: Activity, city: String): Intent {

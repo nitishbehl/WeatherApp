@@ -17,8 +17,14 @@ class DetailsViewModel : ViewModel() {
     suspend fun getWeatherApi(city: String): WeatherResponse? {
         val urlString = if (city == "Toronto") {
             "https://nitishbehl.github.io/Data/Weather_Toronto.json"
-        } else {
+        } else if (city == "Vancouver") {
             "https://nitishbehl.github.io/Data/Weather_Vancouver.json"
+        } else if (city == "Calgary") {
+            "https://nitishbehl.github.io/Data/Weather_Calgary.json"
+        } else if (city == "Montreal") {
+            "https://nitishbehl.github.io/Data/Weather_Montreal.json"
+        } else {
+            "https://nitishbehl.github.io/Data/Weather_Halifax.json"
         }
 
         val client = HttpClient(OkHttp).get(urlString)
